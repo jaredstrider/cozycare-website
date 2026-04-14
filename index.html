@@ -497,19 +497,88 @@ footer {
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
-  .about-inner,.compare-grid,.story-grid { grid-template-columns:1fr; gap:50px; }
+  .about-inner,.compare-grid,.story-grid { grid-template-columns:1fr; gap:40px; }
   .why-grid { grid-template-columns:1fr 1fr; }
 }
 @media(max-width:768px){
-  .nav,.nav.scrolled { padding:14px 24px; }
+  /* Nav */
+  .nav,.nav.scrolled { padding:14px 20px; }
   .nav-links { display:none; }
-  .hero-content { padding:0 24px; padding-top:100px; }
-  .section,.about-inner,.compare-inner,.story-inner { padding:80px 24px; }
-  .why-grid { grid-template-columns:1fr; }
-  .trust-bar { gap:20px; flex-wrap:wrap; padding:20px 24px; }
-  .cta-wrap { padding:80px 24px; }
-  .cta-form { flex-direction:column; }
-  footer { flex-direction:column; gap:12px; text-align:center; padding:28px 24px; }
+
+  /* Hero - tighten up */
+  .hero { min-height:92vh; }
+  .hero-content { padding:0 20px; padding-top:80px; }
+  .hero h1 { font-size:2.4rem; letter-spacing:-1px; margin-bottom:16px; }
+  .hero-sub { font-size:.95rem; margin-bottom:28px; line-height:1.65; }
+  .hero-eyebrow { font-size:.68rem; padding:6px 14px; margin-bottom:20px; }
+  .hero-actions { gap:12px; }
+  .btn-primary { padding:13px 26px; font-size:.88rem; }
+  .btn-outline { padding:13px 20px; font-size:.85rem; }
+  .hero-scroll { display:none; }
+
+  /* Trust bar - compact 2-col grid */
+  .trust-bar {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:18px 20px;
+  }
+  .trust-item { font-size:.78rem; gap:6px; }
+
+  /* Sections - much tighter padding */
+  .section { padding:52px 20px; }
+  .about-wrap { padding:52px 0; }
+  .about-inner { padding:0 20px; gap:28px; }
+  .compare-inner { padding:0 20px; }
+  .story-inner { padding:0 20px; }
+
+  /* Hide the big product blob on mobile - just show text */
+  .about-visual { display:none; }
+  .about-text { padding-top:0; }
+  .feat-list { margin-top:28px; }
+  .feat { padding:16px 0; }
+
+  /* Why grid - single col, tighter */
+  .why-grid { grid-template-columns:1fr; gap:14px; margin-top:32px; }
+  .why-card { padding:24px; border-radius:18px; }
+  .why-ico { font-size:1.6rem; margin-bottom:12px; }
+
+  /* Compare section */
+  .compare-wrap { padding:52px 0; }
+  .compare-grid { gap:16px; margin-top:32px; }
+  .c-card { padding:24px 20px; border-radius:18px; }
+  .c-row { flex-direction:column; gap:2px; padding:10px 0; align-items:flex-start; }
+  .c-row .lbl { font-size:.75rem; }
+  .c-row .val { font-size:.88rem; }
+  .c-brand { margin-bottom:20px; }
+  .c-brand h3 { font-size:1.2rem; }
+  .c-pill { font-size:.65rem; padding:3px 10px; white-space:nowrap; }
+
+  /* Story section */
+  .story-wrap { padding:52px 0; }
+  .story-grid { gap:32px; margin-top:32px; }
+  .story-visual { padding:28px 24px; border-radius:20px; }
+  .sp { gap:14px; }
+  .sp-ico { width:42px; height:42px; border-radius:12px; font-size:1.1rem; }
+  .sv-item { padding:13px 0; }
+  .sv-item .si-val { font-size:1.3rem; }
+
+  /* Sections headings */
+  h2.title { font-size:1.9rem; letter-spacing:-.3px; margin-bottom:10px; }
+  .sub { font-size:.9rem; line-height:1.65; }
+  .tag { font-size:.68rem; padding:5px 12px; margin-bottom:12px; }
+
+  /* CTA */
+  .cta-wrap { padding:60px 20px; }
+  .cta-wrap h2 { font-size:1.9rem; }
+  .cta-wrap p { font-size:.9rem; margin-bottom:32px; }
+  .cta-form { flex-direction:column; gap:10px; }
+  .cta-form input,.cta-form button { border-radius:14px; }
+  .cta-assurances { gap:12px; }
+  .cta-assurances span { font-size:.72rem; }
+
+  /* Footer */
+  footer { flex-direction:column; gap:10px; text-align:center; padding:24px 20px; font-size:.75rem; }
 }
 </style>
 </head>
@@ -619,7 +688,7 @@ footer {
   </div>
 </div>
 
-<!-- WHY COZYCARE -->
+<!-- WHY COYYcARE -->
 <section class="section" id="why">
   <div class="reveal">
     <span class="tag">Why ThermaBlanket</span>
