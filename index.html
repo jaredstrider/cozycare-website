@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ThermaBlanket â Patient Warming Solutions</title>
+<title>ThermaBlanket — Patient Warming Solutions</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&display=swap');
 
@@ -32,7 +32,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--cr
 ::-webkit-scrollbar-track { background:#f0ede9; }
 ::-webkit-scrollbar-thumb { background:var(--orange-mid); border-radius:3px; }
 
-/* ââ NAV ââ */
+/* ── NAV ── */
 .nav {
   position:fixed; top:0; left:0; right:0; z-index:1000;
   padding:22px 60px;
@@ -69,7 +69,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--cr
 .nav.scrolled .nav-cta { background:var(--orange-mid); }
 .nav-cta:hover { background:var(--orange-deep) !important; }
 
-/* ââ ANIMATED HERO ââ */
+/* ── ANIMATED HERO ── */
 .hero {
   min-height:100vh;
   position:relative;
@@ -83,7 +83,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--cr
   background: var(--navy-deep);
 }
 
-/* Blob 1 â big warm orange, top-right */
+/* Blob 1 — big warm orange, top-right */
 .blob { position:absolute; border-radius:50%; filter:blur(90px); mix-blend-mode:screen; }
 .b1 {
   width:70vw; height:70vw; max-width:800px; max-height:800px;
@@ -225,7 +225,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--cr
 }
 @keyframes scrollPulse { 0%,100%{opacity:.35} 50%{opacity:.8} }
 
-/* ââ TRUST BAR ââ */
+/* ── TRUST BAR ── */
 .trust-bar {
   background:#fff; padding:22px 60px;
   display:flex; align-items:center; justify-content:center; gap:48px;
@@ -241,7 +241,7 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--cr
   color:var(--orange-mid);
 }
 
-/* ââ GENERIC SECTION ââ */
+/* ── GENERIC SECTION ── */
 .section { padding:110px 60px; max-width:1140px; margin:0 auto; }
 .tag {
   display:inline-block;
@@ -263,7 +263,7 @@ h2.title em { font-style:italic; color:var(--orange-mid); }
   max-width:560px; line-height:1.75;
 }
 
-/* ââ ABOUT / PRODUCT ââ */
+/* ── ABOUT / PRODUCT ── */
 .about-wrap {
   background:#fff; padding:110px 0;
 }
@@ -314,7 +314,7 @@ h2.title em { font-style:italic; color:var(--orange-mid); }
 .feat h4 { font-size:.96rem; font-weight:700; color:var(--navy-mid); margin-bottom:5px; }
 .feat p  { font-size:.87rem; color:var(--muted); line-height:1.65; }
 
-/* ââ WHY ââ */
+/* ── WHY ── */
 .why-grid {
   display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:56px;
 }
@@ -335,7 +335,7 @@ h2.title em { font-style:italic; color:var(--orange-mid); }
 .why-card h3 { font-size:1.02rem; font-weight:700; color:var(--navy-mid); margin-bottom:10px; }
 .why-card p  { font-size:.87rem; color:var(--muted); line-height:1.68; }
 
-/* ââ DARK COMPARE ââ */
+/* ── DARK COMPARE ── */
 .compare-wrap {
   background:linear-gradient(175deg, var(--navy-deep) 0%, var(--navy-soft) 100%);
   padding:110px 0; color:#fff;
@@ -375,7 +375,7 @@ h2.title em { font-style:italic; color:var(--orange-mid); }
 .val-bad  { color:#e74c3c; }
 .val-good { color:var(--orange-warm); }
 
-/* ââ SA STORY ââ */
+/* ── SA STORY ── */
 .story-wrap { background:var(--cream); padding:110px 0; }
 .story-inner { max-width:1140px; margin:0 auto; padding:0 60px; }
 .story-grid {
@@ -418,7 +418,7 @@ h2.title em { font-style:italic; color:var(--orange-mid); }
 }
 .sv-item .si-sub { font-size:.72rem; color:rgba(255,255,255,.3); text-align:right; }
 
-/* ââ CTA ââ */
+/* ── CTA ── */
 .cta-wrap {
   position:relative; padding:120px 60px; text-align:center; overflow:hidden;
   background:var(--navy-deep);
@@ -479,7 +479,7 @@ h2.title em { font-style:italic; color:var(--orange-mid); }
   font-size:.77rem; color:rgba(255,255,255,.35); font-weight:500;
 }
 
-/* ââ FOOTER ââ */
+/* ── FOOTER ── */
 footer {
   background:var(--navy-deep);
   border-top:1px solid rgba(255,255,255,.06);
@@ -493,14 +493,14 @@ footer {
 }
 .footer-logo span { color:var(--orange-mid); }
 
-/* ââ ANIMATIONS ââ */
+/* ── ANIMATIONS ── */
 .reveal {
   opacity:0; transform:translateY(28px);
   transition:opacity .7s ease, transform .7s ease;
 }
 .reveal.in { opacity:1; transform:translateY(0); }
 
-/* ââ RESPONSIVE ââ */
+/* ── RESPONSIVE ── */
 @media(max-width:1024px){
   .about-inner,.compare-grid,.story-grid { grid-template-columns:1fr; gap:40px; }
   .why-grid { grid-template-columns:1fr 1fr; }
@@ -528,7 +528,8 @@ footer {
     gap:10px;
     padding:18px 20px;
   }
-  .trust-item { font-size:.78rem; gap:6px; }
+  .trust-item { font-size:.76rem; gap:6px; }
+  .trust-item svg { width:14px; height:14px; }
 
   /* Sections - much tighter padding */
   .section { padding:52px 20px; }
@@ -615,18 +616,18 @@ footer {
   <div class="hero-content">
     <div class="hero-eyebrow">
       <span class="pulse-dot"></span>
-      Proudly South African &nbsp;Â·&nbsp; Patient Warming Solutions
+      Proudly South African &nbsp;·&nbsp; Patient Warming Solutions
     </div>
     <h1>
       Every Patient Deserves
       <em class="line2">to Feel Safe &amp; Warm.</em>
     </h1>
     <p class="hero-sub">
-      ThermaBlanket provides South African operating theatres with the most effective, infection-safe patient warming blankets available â engineered for the demands of modern surgery, made right here at home.
+      ThermaBlanket provides South African operating theatres with the most effective, infection-safe patient warming blankets available — engineered for the demands of modern surgery, made right here at home.
     </p>
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Request a Demo &rarr;</a>
-      <a href="#about" class="btn-outline">See How It Works â</a>
+      <a href="#about" class="btn-outline">See How It Works ↓</a>
     </div>
   </div>
 
@@ -638,18 +639,33 @@ footer {
 
 <!-- TRUST BAR -->
 <div class="trust-bar">
-  <div class="trust-item">ð¥ Compatible with major SA theatre groups</div>
-  <div class="trust-item">â SAHPRA Registered</div>
-  <div class="trust-item">ð¿ð¦ Manufactured in South Africa</div>
-  <div class="trust-item">âï¸ Clinically validated technology</div>
-  <div class="trust-item">ð¤ BBBEE Compliant</div>
+  <div class="trust-item">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 8.5L6 12L13.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Compatible with major SA theatre groups
+  </div>
+  <div class="trust-item">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 8.5L6 12L13.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    SAHPRA Registered
+  </div>
+  <div class="trust-item">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 8.5L6 12L13.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Manufactured in South Africa
+  </div>
+  <div class="trust-item">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 8.5L6 12L13.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Clinically Validated
+  </div>
+  <div class="trust-item">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 8.5L6 12L13.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    BBBEE Compliant
+  </div>
 </div>
 
 <!-- PRODUCT / ABOUT -->
 <div class="about-wrap" id="about">
   <div class="about-inner">
     <div class="about-visual reveal">
-      <div class="about-blob">ðï¸</div>
+      <div class="about-blob">🛏️</div>
       <div class="about-float">
         <div class="af-val">Zero</div>
         <div class="af-label">Airborne contamination risk</div>
@@ -658,34 +674,34 @@ footer {
     <div class="about-text reveal">
       <span class="tag">The Product</span>
       <h2 class="title">Warmth That Doesn't<br><em>Compromise Safety.</em></h2>
-      <p class="sub">Traditional forced-air warming systems pump heated air through perforated blankets â and straight into your sterile surgical field. ThermaBlanket uses resistive warming technology that delivers consistent, controlled heat directly to the patient, with no airflow, no turbulence, and no bacterial dispersal risk.</p>
+      <p class="sub">Traditional forced-air warming systems pump heated air through perforated blankets — and straight into your sterile surgical field. ThermaBlanket uses resistive warming technology that delivers consistent, controlled heat directly to the patient, with no airflow, no turbulence, and no bacterial dispersal risk.</p>
       <div class="feat-list">
         <div class="feat">
-          <div class="feat-ico">ð¡ï¸</div>
+          <div class="feat-ico">🌡️</div>
           <div>
             <h4>Consistent, Controlled Warmth</h4>
-            <p>Uniform heat distribution maintains normothermia throughout the procedure â from induction through to recovery â without the temperature spikes of forced-air systems.</p>
+            <p>Uniform heat distribution maintains normothermia throughout the procedure — from induction through to recovery — without the temperature spikes of forced-air systems.</p>
           </div>
         </div>
         <div class="feat">
-          <div class="feat-ico">ð¦ </div>
+          <div class="feat-ico">🦠</div>
           <div>
             <h4>No Air, No Risk</h4>
             <p>Our blankets produce zero airflow in the OR. No recirculation of floor-level bacteria. No turbulence in the sterile field. Just clean, safe warmth for every patient.</p>
           </div>
         </div>
         <div class="feat">
-          <div class="feat-ico">â¡</div>
+          <div class="feat-ico">⚡</div>
           <div>
             <h4>Ready with Your Existing Setup</h4>
-            <p>No capital equipment purchase required. ThermaBlanket integrates with standard OR power infrastructure â a seamless switch that won't disrupt your theatre workflow.</p>
+            <p>No capital equipment purchase required. ThermaBlanket integrates with standard OR power infrastructure — a seamless switch that won't disrupt your theatre workflow.</p>
           </div>
         </div>
         <div class="feat">
-          <div class="feat-ico">ð°</div>
+          <div class="feat-ico">💰</div>
           <div>
             <h4>Significantly Lower Cost Per Case</h4>
-            <p>ThermaBlanket delivers the same clinical outcomes as imported alternatives at a fraction of the consumable cost â without the import markups, currency volatility, or supply delays.</p>
+            <p>ThermaBlanket delivers the same clinical outcomes as imported alternatives at a fraction of the consumable cost — without the import markups, currency volatility, or supply delays.</p>
           </div>
         </div>
       </div>
@@ -693,43 +709,43 @@ footer {
   </div>
 </div>
 
-<!-- WHY COYYcARE -->
+<!-- WHY COZICARE -->
 <section class="section" id="why">
   <div class="reveal">
     <span class="tag">Why ThermaBlanket</span>
     <h2 class="title">A Better Standard of Care,<br><em>Built for South Africa.</em></h2>
-    <p class="sub">We started ThermaBlanket because we believed South African patients and hospitals deserve a warming solution built specifically for them â not an imported afterthought.</p>
+    <p class="sub">We started ThermaBlanket because we believed South African patients and hospitals deserve a warming solution built specifically for them — not an imported afterthought.</p>
   </div>
   <div class="why-grid">
     <div class="why-card reveal">
-      <div class="why-ico">ð¡ï¸</div>
+      <div class="why-ico">🛡️</div>
       <h3>Infection-Safe by Design</h3>
       <p>We built ThermaBlanket from the ground up to eliminate the infection risks associated with forced-air warming. No airflow means no pathways for contamination into the sterile field.</p>
     </div>
     <div class="why-card reveal">
-      <div class="why-ico">ð¿ð¦</div>
+      <div class="why-ico">🇿🇦</div>
       <h3>South Africa's Own Brand</h3>
-      <p>No import delays, no currency exposure, no dependence on foreign supply chains. ThermaBlanket is local â built to serve South African theatres and support local healthcare procurement goals.</p>
+      <p>No import delays, no currency exposure, no dependence on foreign supply chains. ThermaBlanket is local — built to serve South African theatres and support local healthcare procurement goals.</p>
     </div>
     <div class="why-card reveal">
-      <div class="why-ico">ð¼</div>
+      <div class="why-ico">💼</div>
       <h3>Procurement Friendly</h3>
-      <p>BBBEE compliant and SAHPRA registered. ThermaBlanket helps hospital groups meet their local supplier commitments â without compromising on clinical quality or reliability.</p>
+      <p>BBBEE compliant and SAHPRA registered. ThermaBlanket helps hospital groups meet their local supplier commitments — without compromising on clinical quality or reliability.</p>
     </div>
     <div class="why-card reveal">
-      <div class="why-ico">ð</div>
+      <div class="why-ico">📋</div>
       <h3>Clinically Grounded</h3>
       <p>Our warming technology is grounded in peer-reviewed evidence. We work with South African anaesthesiologists and infection control specialists to ensure every blanket meets the highest clinical standards.</p>
     </div>
     <div class="why-card reveal">
-      <div class="why-ico">ð</div>
+      <div class="why-ico">🔄</div>
       <h3>Effortless to Switch</h3>
-      <p>We handle everything â staff training, protocol integration, and ongoing clinical support. Switching to ThermaBlanket is straightforward and doesn't disrupt your theatre operations.</p>
+      <p>We handle everything — staff training, protocol integration, and ongoing clinical support. Switching to ThermaBlanket is straightforward and doesn't disrupt your theatre operations.</p>
     </div>
     <div class="why-card reveal">
-      <div class="why-ico">ð¤</div>
+      <div class="why-ico">🤝</div>
       <h3>A Partner, Not Just a Supplier</h3>
-      <p>Our team is on the ground across South Africa. When you call, a person answers. We're invested in your outcomes â because your patients' safety is our purpose.</p>
+      <p>Our team is on the ground across South Africa. When you call, a person answers. We're invested in your outcomes — because your patients' safety is our purpose.</p>
     </div>
   </div>
 </section>
@@ -740,7 +756,7 @@ footer {
     <div class="reveal">
       <span class="tag">Side by Side</span>
       <h2 class="title">How We Compare</h2>
-      <p class="sub">Forced-air warming has been the default for decades. ThermaBlanket offers a clinically sound, locally made alternative â with no compromises.</p>
+      <p class="sub">Forced-air warming has been the default for decades. ThermaBlanket offers a clinically sound, locally made alternative — with no compromises.</p>
     </div>
     <div class="compare-grid reveal">
       <div class="c-card">
@@ -751,22 +767,22 @@ footer {
         <div class="c-row"><span class="lbl">Technology</span><span class="val">Forced-air through blanket</span></div>
         <div class="c-row"><span class="lbl">Infection Risk</span><span class="val val-bad">Airborne bacterial dispersal</span></div>
         <div class="c-row"><span class="lbl">OR Turbulence</span><span class="val val-bad">Significant</span></div>
-        <div class="c-row"><span class="lbl">Cost Per Case</span><span class="val val-bad">High â import pricing</span></div>
-        <div class="c-row"><span class="lbl">SA Supply Chain</span><span class="val val-bad">Imported â delays &amp; FX risk</span></div>
+        <div class="c-row"><span class="lbl">Cost Per Case</span><span class="val val-bad">High — import pricing</span></div>
+        <div class="c-row"><span class="lbl">SA Supply Chain</span><span class="val val-bad">Imported — delays &amp; FX risk</span></div>
         <div class="c-row"><span class="lbl">BBBEE Value</span><span class="val val-bad">None</span></div>
         <div class="c-row"><span class="lbl">Local Support</span><span class="val val-bad">Distributor only</span></div>
       </div>
       <div class="c-card hero-card-highlight">
         <div class="c-brand">
           <h3 style="color:var(--orange-warm); font-family:'Fraunces',serif;">ThermaBlanket</h3>
-          <span class="c-pill good">ð¿ð¦ Made in SA</span>
+          <span class="c-pill good">🇿🇦 Made in SA</span>
         </div>
-        <div class="c-row"><span class="lbl">Technology</span><span class="val val-good">Resistive â zero airflow</span></div>
-        <div class="c-row"><span class="lbl">Infection Risk</span><span class="val val-good">None â no air dispersal</span></div>
+        <div class="c-row"><span class="lbl">Technology</span><span class="val val-good">Resistive — zero airflow</span></div>
+        <div class="c-row"><span class="lbl">Infection Risk</span><span class="val val-good">None — no air dispersal</span></div>
         <div class="c-row"><span class="lbl">OR Turbulence</span><span class="val val-good">Zero</span></div>
         <div class="c-row"><span class="lbl">Cost Per Case</span><span class="val val-good">Significantly lower</span></div>
-        <div class="c-row"><span class="lbl">SA Supply Chain</span><span class="val val-good">Local â guaranteed availability</span></div>
-        <div class="c-row"><span class="lbl">BBBEE Value</span><span class="val val-good">Level 1â2 Certified</span></div>
+        <div class="c-row"><span class="lbl">SA Supply Chain</span><span class="val val-good">Local — guaranteed availability</span></div>
+        <div class="c-row"><span class="lbl">BBBEE Value</span><span class="val val-good">Level 1–2 Certified</span></div>
         <div class="c-row"><span class="lbl">Local Support</span><span class="val val-good">Direct SA clinical team</span></div>
       </div>
     </div>
@@ -784,21 +800,21 @@ footer {
     <div class="story-grid">
       <div class="story-points reveal">
         <div class="sp">
-          <div class="sp-ico orange">ð­</div>
+          <div class="sp-ico orange">🏭</div>
           <div>
             <h4>Local Manufacturing. Reliable Supply.</h4>
             <p>Every ThermaBlanket blanket is produced in South Africa. That means no import delays, no rand volatility on consumables, and guaranteed stock availability for your theatre programme.</p>
           </div>
         </div>
         <div class="sp">
-          <div class="sp-ico teal">ðï¸</div>
+          <div class="sp-ico teal">🏛️</div>
           <div>
             <h4>Ready for the Future of South African Healthcare</h4>
             <p>As South Africa's health system evolves, local procurement, BBBEE compliance, and SAHPRA registration matter more than ever. ThermaBlanket was built with all of this in mind from day one.</p>
           </div>
         </div>
         <div class="sp">
-          <div class="sp-ico navy">â¤ï¸</div>
+          <div class="sp-ico navy">❤️</div>
           <div>
             <h4>Patient Safety Is the Only Goal</h4>
             <p>We didn't start ThermaBlanket to chase a market opportunity. We started it because we believe every surgical patient in South Africa deserves the safest, most effective warming care available.</p>
@@ -817,7 +833,7 @@ footer {
         </div>
         <div class="sv-item">
           <div class="si-label">Manufactured</div>
-          <div><div class="si-val">ð¿ð¦ SA</div><div class="si-sub">Local supply chain</div></div>
+          <div><div class="si-val">🇿🇦 SA</div><div class="si-sub">Local supply chain</div></div>
         </div>
         <div class="sv-item">
           <div class="si-label">BBBEE</div>
@@ -850,9 +866,9 @@ footer {
       <button type="button">Get in Touch</button>
     </div>
     <div class="cta-assurances">
-      <span>â Free pilot programme available</span>
-      <span>â On-site training included</span>
-      <span>â No commitment required</span>
+      <span>✓ Free pilot programme available</span>
+      <span>✓ On-site training included</span>
+      <span>✓ No commitment required</span>
     </div>
   </div>
 </div>
@@ -860,7 +876,7 @@ footer {
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Therma<span>Blanket</span> <span style="font-size:.7rem;color:rgba(255,255,255,.2);font-family:sans-serif;font-weight:400;">by First Medical Company</span></div>
-  <div>Â© 2025 First Medical Company (Pty) Ltd Â· South Africa Â· All rights reserved</div>
+  <div>© 2025 First Medical Company (Pty) Ltd · South Africa · All rights reserved</div>
 </footer>
 
 <script>
