@@ -992,7 +992,13 @@ const ro = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 reveals.forEach(el => ro.observe(el));
 
-// Hero FX: blob parallax + thermal cursor (mouse on desktop, auto-orbit on mobile)
+// ─────────────────────────────────────────────────────────────────────────────
+// UNIFIED HERO FX
+// Mouse still  → blobs drift autonomously in parallax orbit loops
+// Mouse moves  → blobs instantly snap into mouse-driven parallax depth
+// Thermal glow → same: orbits when still, follows mouse when moving
+// Mobile       → always orbit mode (no mouse)
+// ─────────────────────────────────────────────────────────────────────────────
 (function() {
   const hero = document.querySelector('.hero');
   const core = document.getElementById('thermalCore');
@@ -1009,93 +1015,138 @@ reveals.forEach(el => ro.observe(el));
     { el: document.querySelector('.b4'), depth: 0.095, phase: 0.9 },
     { el: document.querySelector('.b5'), depth: 0.135, phase: 1.8 },
   ];
-  function lerp(a,b,k){ return a+(b-a)*k; }
+
+  function lerp(a, b, k) { return a + (b - a) * k; }
+
+  // mouseActivity: 0 = full orbit, 1 = full mouse-parallax
+  // Snaps to 1 the instant mouse moves, then fades back to 0 when still
+  let mouseActivity = 0;
+  let lastMove = 0;
+  const ORBIT_LAG = 700; // ms of stillness before easing into orbit
+
+  // Raw + smoothed mouse
+  let mx = innerWidth * 0.5, my = innerHeight * 0.45;
+  let smx = mx, smy = my;
+
+  // Thermal smoothed positions
+  let cmx = mx, cmy = my, amx = mx, amy = my, hmx = mx, hmy = my;
+
+  let inside = false, breathing = false, idleTimer;
 
   if (!isMobile) {
-    // DESKTOP: mouse parallax + thermal cursor
-    let mx=0,my=0,smx=0,smy=0;
-    let cmx=innerWidth*0.6,cmy=innerHeight*0.45,amx=cmx,amy=cmy,hmx=cmx,hmy=cmy;
-    let inside=false,breathing=false,idleTimer;
-    hero.addEventListener('mouseenter',()=>{inside=true;[core,aura,halo].forEach(el=>{if(el)el.style.transition='opacity 0.6s';});},{passive:true});
-    hero.addEventListener('mouseleave',()=>{inside=false;},{passive:true});
-    document.addEventListener('mousemove',e=>{
-      mx=e.clientX; my=e.clientY;
-      if(breathing){breathing=false;[core,aura,halo].forEach(el=>{if(el)el.classList.remove('breathing');});}
-      clearTimeout(idleTimer);
-      idleTimer=setTimeout(()=>{
-        if(!inside)return; breathing=true;
-        [core,aura,halo].forEach(el=>{if(el)el.classList.add('breathing');});
-      },600);
-    },{passive:true});
-    function tick(){
-      const now=performance.now();
-      smx=lerp(smx,mx,0.038); smy=lerp(smy,my,0.038);
-      const nmx=(smx/innerWidth-0.5), nmy=(smy/innerHeight-0.5);
-      blobs.forEach(b=>{
-        if(!b.el)return;
-        const d=b.depth*innerWidth;
-        const fx=Math.sin(now*0.00028+b.phase)*28;
-        const fy=Math.cos(now*0.00019+b.phase*1.4)*20;
-        b.el.style.transform='translate('+(fx+nmx*d*-1.8)+'px,'+(fy+nmy*d*-1.4)+'px)';
-      });
-      if(!breathing){
-        cmx=lerp(cmx,mx,0.12);cmy=lerp(cmy,my,0.12);
-        amx=lerp(amx,mx,0.052);amy=lerp(amy,my,0.052);
-        hmx=lerp(hmx,mx,0.025);hmy=lerp(hmy,my,0.025);
+    hero.addEventListener('mouseenter', () => {
+      inside = true;
+      [core,aura,halo].forEach(el => { if (el) el.style.transition = 'opacity 0.5s'; });
+    }, {passive:true});
+    hero.addEventListener('mouseleave', () => { inside = false; }, {passive:true});
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      lastMove = performance.now();
+
+      // Instantly enter parallax mode
+      mouseActivity = 1;
+
+      // Kill breathing on any move
+      if (breathing) {
+        breathing = false;
+        [core,aura,halo].forEach(el => { if (el) el.classList.remove('breathing'); });
       }
-      const op=inside?1:0, rect=hero.getBoundingClientRect();
-      if(core){core.style.opacity=op;core.style.left=(cmx-rect.left)+'px';core.style.top=(cmy-rect.top)+'px';}
-      if(aura){aura.style.opacity=op;aura.style.left=(amx-rect.left)+'px';aura.style.top=(amy-rect.top)+'px';}
-      if(halo){halo.style.opacity=op*0.7;halo.style.left=(hmx-rect.left)+'px';halo.style.top=(hmy-rect.top)+'px';}
-      requestAnimationFrame(tick);
+      clearTimeout(idleTimer);
+      // Start breathing a little after orbit kicks in
+      idleTimer = setTimeout(() => {
+        if (!inside) return;
+        breathing = true;
+        [core,aura,halo].forEach(el => { if (el) el.classList.add('breathing'); });
+      }, ORBIT_LAG + 400);
+    }, {passive:true});
+  }
+
+  function tick() {
+    const now = performance.now();
+    const rect = hero.getBoundingClientRect();
+    const W = rect.width, H = rect.height;
+
+    // ── Fade mouseActivity toward 0 when mouse still (desktop only) ────────
+    if (!isMobile && now - lastMove > ORBIT_LAG) {
+      mouseActivity = lerp(mouseActivity, 0, 0.018); // ~3s to full orbit
     }
-    tick();
-    return;
-  }
 
-  // MOBILE: autonomous thermal orbit — warmth loops around the hero on its own
-  // Each layer follows a different path at a different speed = layered parallax depth
-  let gcx, gcy, gax, gay, ghx, ghy;
-  function initPos(){
-    const r=hero.getBoundingClientRect();
-    gcx=gax=ghx=r.width*0.5; gcy=gay=ghy=r.height*0.42;
-  }
-  initPos();
+    // Smooth mouse for parallax calc
+    smx = lerp(smx, mx, 0.038);
+    smy = lerp(smy, my, 0.038);
+    const nmx = smx / innerWidth  - 0.5;  // -0.5 to 0.5
+    const nmy = smy / innerHeight - 0.5;
 
-  function mobileTick(){
-    const now=performance.now();
-    const rect=hero.getBoundingClientRect();
-    const W=rect.width, H=rect.height;
+    // ── BLOBS: blend between orbit target and parallax target ───────────────
+    blobs.forEach(b => {
+      if (!b.el) return;
 
-    // Blobs: each orbits at its own radius + speed (closer = faster + wider)
-    blobs.forEach(b=>{
-      if(!b.el)return;
-      const spd=0.00020+b.depth*0.00060;
-      const rx=W*(0.10+b.depth*0.85), ry=H*(0.08+b.depth*0.55);
-      const fx=Math.sin(now*spd       +b.phase)*rx;
-      const fy=Math.cos(now*spd*0.71  +b.phase*1.4)*ry;
-      b.el.style.transform='translate('+fx+'px,'+fy+'px)';
+      // Orbit: autonomous sine/cosine drift (wider = closer to viewer)
+      const spd = 0.00020 + b.depth * 0.00052;
+      const rx = W * (0.08 + b.depth * 0.80);
+      const ry = H * (0.07 + b.depth * 0.52);
+      const ox = Math.sin(now * spd          + b.phase)       * rx;
+      const oy = Math.cos(now * spd * 0.72   + b.phase * 1.4) * ry;
+
+      // Parallax: mouse offset (closer blobs displace more)
+      const d = b.depth * W;
+      const floatX = Math.sin(now * 0.00026 + b.phase) * 20;
+      const floatY = Math.cos(now * 0.00018 + b.phase * 1.4) * 14;
+      const px = floatX + nmx * d * -1.8;
+      const py = floatY + nmy * d * -1.4;
+
+      // Smooth blend — mouseActivity drives the crossfade
+      const tx = lerp(ox, px, mouseActivity);
+      const ty = lerp(oy, py, mouseActivity);
+      b.el.style.transform = 'translate(' + tx + 'px,' + ty + 'px)';
     });
 
-    // Thermal layers: wander in slow Lissajous loops, each at its own rhythm
-    const txC=W*0.50+Math.sin(now*0.00052)           *W*0.30;
-    const tyC=H*0.42+Math.sin(now*0.00040*2+1.2)     *H*0.20;
-    const txA=W*0.50+Math.sin(now*0.00036+0.8)        *W*0.34;
-    const tyA=H*0.44+Math.cos(now*0.00026+2.0)        *H*0.24;
-    const txH=W*0.50+Math.cos(now*0.00021+1.5)        *W*0.22;
-    const tyH=H*0.46+Math.sin(now*0.00017*1.6+0.4)   *H*0.16;
+    // ── THERMAL: same blend — orbit vs. mouse ───────────────────────────────
+    // Orbit targets for each layer (different Lissajous paths)
+    const coX = W*0.50 + Math.sin(now*0.00052)              * W*0.28;
+    const coY = H*0.42 + Math.sin(now*0.00080+1.2)          * H*0.19;
+    const aoX = W*0.50 + Math.sin(now*0.00036+0.8)          * W*0.32;
+    const aoY = H*0.44 + Math.cos(now*0.00026+2.0)          * H*0.23;
+    const hoX = W*0.50 + Math.cos(now*0.00021+1.5)          * W*0.20;
+    const hoY = H*0.46 + Math.sin(now*0.00017*1.6+0.4)      * H*0.14;
 
-    gcx=lerp(gcx,txC,0.020); gcy=lerp(gcy,tyC,0.020);
-    gax=lerp(gax,txA,0.011); gay=lerp(gay,tyA,0.011);
-    ghx=lerp(ghx,txH,0.007); ghy=lerp(ghy,tyH,0.007);
+    // Mouse targets (relative to hero)
+    const mxR = isMobile ? W*0.5 : mx - rect.left;
+    const myR = isMobile ? H*0.42: my - rect.top;
 
-    if(core){core.style.left=gcx+'px';core.style.top=gcy+'px';core.style.opacity='1';}
-    if(aura){aura.style.left=gax+'px';aura.style.top=gay+'px';aura.style.opacity='1';}
-    if(halo){halo.style.left=ghx+'px';halo.style.top=ghy+'px';halo.style.opacity='0.7';}
+    // Blended target positions
+    const tcx = lerp(coX, mxR, mouseActivity);
+    const tcy = lerp(coY, myR, mouseActivity);
+    const tax = lerp(aoX, mxR, mouseActivity);
+    const tay = lerp(aoY, myR, mouseActivity);
+    const thx = lerp(hoX, mxR, mouseActivity);
+    const thy = lerp(hoY, myR, mouseActivity);
 
-    requestAnimationFrame(mobileTick);
+    // Lerp speed also changes: orbit=slow, parallax=fast (responsive feel)
+    const cK = lerp(0.018, 0.13,  mouseActivity);
+    const aK = lerp(0.011, 0.052, mouseActivity);
+    const hK = lerp(0.006, 0.025, mouseActivity);
+
+    cmx = lerp(cmx, tcx, cK); cmy = lerp(cmy, tcy, cK);
+    amx = lerp(amx, tax, aK); amy = lerp(amy, tay, aK);
+    hmx = lerp(hmx, thx, hK); hmy = lerp(hmy, thy, hK);
+
+    const show = isMobile || inside;
+    if (!breathing) {
+      if (core) { core.style.opacity = show?'1':'0'; core.style.left=cmx+'px'; core.style.top=cmy+'px'; }
+      if (aura) { aura.style.opacity = show?'1':'0'; aura.style.left=amx+'px'; aura.style.top=amy+'px'; }
+      if (halo) { halo.style.opacity = show?'0.65':'0'; halo.style.left=hmx+'px'; halo.style.top=hmy+'px'; }
+    } else {
+      // During breathing: keep position anchored at last known spot, CSS handles scale
+      if (core) { core.style.left=cmx+'px'; core.style.top=cmy+'px'; }
+      if (aura) { aura.style.left=amx+'px'; aura.style.top=amy+'px'; }
+      if (halo) { halo.style.left=hmx+'px'; halo.style.top=hmy+'px'; }
+    }
+
+    requestAnimationFrame(tick);
   }
-  mobileTick();
+  tick();
 })();
 </script>
 </body>
