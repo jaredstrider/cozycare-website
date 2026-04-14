@@ -150,9 +150,25 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--cr
 .hero-content {
   position:relative; z-index:3;
   max-width:1100px; margin:0 auto;
-  padding:0 60px; padding-top:100px;
+  padding:0 60px;
   width:100%;
+  display:flex; flex-direction:column; justify-content:center;
+  min-height:100vh;
+  will-change:transform;
 }
+.hero-scroll-fade {
+  position:absolute; bottom:0; left:0; right:0; height:22%; z-index:4;
+  background:linear-gradient(to bottom, transparent, var(--navy-deep));
+  pointer-events:none;
+}
+.b5 {
+  width:28vw; height:28vw; max-width:340px; max-height:340px;
+  background: radial-gradient(circle, #c94b1a 0%, transparent 70%);
+  top:58%; left:4%; opacity:.15;
+  mix-blend-mode:screen; filter:blur(65px);
+  animation: floatA 20s ease-in-out infinite alternate;
+}
+.hero-content > * { position:relative; }
 .hero-eyebrow {
   display:inline-flex; align-items:center; gap:8px;
   background:rgba(255,255,255,.07);
@@ -609,11 +625,13 @@ footer {
     <div class="blob b2"></div>
     <div class="blob b3"></div>
     <div class="blob b4"></div>
+  <div class="blob b5"></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-grain"></div>
 
-  <div class="hero-content">
+  <div class="hero-content" id="heroContent">
+  <div class="hero-scroll-fade"></div>
     <div class="hero-eyebrow">
       <span class="pulse-dot"></span>
       Proudly South African &nbsp;·&nbsp; Patient Warming Solutions
@@ -623,7 +641,7 @@ footer {
       <em class="line2">to Feel Safe &amp; Warm.</em>
     </h1>
     <p class="hero-sub">
-      ThermaBlanket provides South African operating theatres with the most effective, infection-safe patient warming blankets available — engineered for the demands of modern surgery, made right here at home.
+      ThermaBlanket delivers clinically proven patient warming to South African operating theatres — engineered for zero infection risk, precise temperature control, and seamless integration with your surgical workflow.
     </p>
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Request a Demo &rarr;</a>
@@ -649,7 +667,7 @@ footer {
   </div>
   <div class="trust-item">
     <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 8.5L6 12L13.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Manufactured in South Africa
+    Sterile Field Safe
   </div>
   <div class="trust-item">
     <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 8.5L6 12L13.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -714,7 +732,7 @@ footer {
   <div class="reveal">
     <span class="tag">Why ThermaBlanket</span>
     <h2 class="title">A Better Standard of Care,<br><em>Built for South Africa.</em></h2>
-    <p class="sub">We started ThermaBlanket because we believed South African patients and hospitals deserve a warming solution built specifically for them — not an imported afterthought.</p>
+    <p class="sub">We built ThermaBlanket around a single conviction: that patient safety should never be compromised by the warming system in your theatre.</p>
   </div>
   <div class="why-grid">
     <div class="why-card reveal">
@@ -725,7 +743,7 @@ footer {
     <div class="why-card reveal">
       <div class="why-ico">🇿🇦</div>
       <h3>South Africa's Own Brand</h3>
-      <p>No import delays, no currency exposure, no dependence on foreign supply chains. ThermaBlanket is local — built to serve South African theatres and support local healthcare procurement goals.</p>
+      <p>No disruptions, no backorders, no delays. ThermaBlanket maintains dedicated stock levels for our hospital partners — so your theatre programme never has to pause.</p>
     </div>
     <div class="why-card reveal">
       <div class="why-ico">💼</div>
@@ -768,20 +786,20 @@ footer {
         <div class="c-row"><span class="lbl">Infection Risk</span><span class="val val-bad">Airborne bacterial dispersal</span></div>
         <div class="c-row"><span class="lbl">OR Turbulence</span><span class="val val-bad">Significant</span></div>
         <div class="c-row"><span class="lbl">Cost Per Case</span><span class="val val-bad">High — import pricing</span></div>
-        <div class="c-row"><span class="lbl">SA Supply Chain</span><span class="val val-bad">Imported — delays &amp; FX risk</span></div>
+        <div class="c-row"><span class="lbl">Supply Reliability</span><span class="val val-bad">Import-dependent — delays &amp; FX risk</span></div>
         <div class="c-row"><span class="lbl">BBBEE Value</span><span class="val val-bad">None</span></div>
         <div class="c-row"><span class="lbl">Local Support</span><span class="val val-bad">Distributor only</span></div>
       </div>
       <div class="c-card hero-card-highlight">
         <div class="c-brand">
           <h3 style="color:var(--orange-warm); font-family:'Fraunces',serif;">ThermaBlanket</h3>
-          <span class="c-pill good">🇿🇦 Made in SA</span>
+          <span class="c-pill good">✶ Clinical Partner</span>
         </div>
         <div class="c-row"><span class="lbl">Technology</span><span class="val val-good">Resistive — zero airflow</span></div>
         <div class="c-row"><span class="lbl">Infection Risk</span><span class="val val-good">None — no air dispersal</span></div>
         <div class="c-row"><span class="lbl">OR Turbulence</span><span class="val val-good">Zero</span></div>
         <div class="c-row"><span class="lbl">Cost Per Case</span><span class="val val-good">Significantly lower</span></div>
-        <div class="c-row"><span class="lbl">SA Supply Chain</span><span class="val val-good">Local — guaranteed availability</span></div>
+        <div class="c-row"><span class="lbl">Supply Reliability</span><span class="val val-good">Dedicated stock — guaranteed availability</span></div>
         <div class="c-row"><span class="lbl">BBBEE Value</span><span class="val val-good">Level 1–2 Certified</span></div>
         <div class="c-row"><span class="lbl">Local Support</span><span class="val val-good">Direct SA clinical team</span></div>
       </div>
@@ -794,22 +812,22 @@ footer {
   <div class="story-inner">
     <div class="reveal">
       <span class="tag">Our Story</span>
-      <h2 class="title">Born in South Africa.<br><em>Built for Its Theatres.</em></h2>
-      <p class="sub">We asked a simple question: why should South African hospitals rely on expensive imported consumables when we can build something better, right here?</p>
+      <h2 class="title">Built for Modern Surgery.<br><em>Trusted by Clinicians.</em></h2>
+      <p class="sub">We asked a simple question: why should patient safety be compromised by warming technology that hasn’t evolved in decades? ThermaBlanket is the answer.</p>
     </div>
     <div class="story-grid">
       <div class="story-points reveal">
         <div class="sp">
           <div class="sp-ico orange">🏭</div>
           <div>
-            <h4>Local Manufacturing. Reliable Supply.</h4>
-            <p>Every ThermaBlanket blanket is produced in South Africa. That means no import delays, no rand volatility on consumables, and guaranteed stock availability for your theatre programme.</p>
+            <h4>Clinical-Grade Quality. Every Time.</h4>
+            <p>ThermaBlanket systems are manufactured to the highest medical-grade standards, with rigorous quality control and dedicated stock levels that keep your theatre running without interruption.</p>
           </div>
         </div>
         <div class="sp">
           <div class="sp-ico teal">🏛️</div>
           <div>
-            <h4>Ready for the Future of South African Healthcare</h4>
+            <h4>Ready for the Future of Surgical Care</h4>
             <p>As South Africa's health system evolves, local procurement, BBBEE compliance, and SAHPRA registration matter more than ever. ThermaBlanket was built with all of this in mind from day one.</p>
           </div>
         </div>
@@ -832,8 +850,8 @@ footer {
           <div><div class="si-val">None</div><div class="si-sub">Sterile-field safe</div></div>
         </div>
         <div class="sv-item">
-          <div class="si-label">Manufactured</div>
-          <div><div class="si-val">🇿🇦 SA</div><div class="si-sub">Local supply chain</div></div>
+          <div class="si-label">Quality Standard</div>
+          <div><div class="si-val">Class B</div><div class="si-sub">Medical-grade certified</div></div>
         </div>
         <div class="sv-item">
           <div class="si-label">BBBEE</div>
@@ -860,7 +878,7 @@ footer {
   </div>
   <div class="cta-content">
     <h2>Let's Bring <em>ThermaBlanket</em><br>to Your Theatres.</h2>
-    <p>Request a pilot programme, arrange a clinical demonstration, or simply get in touch. Our South African team is ready to talk.</p>
+    <p>Request a pilot programme, arrange a clinical demonstration, or simply get in touch. Our dedicated clinical team is ready to talk.</p>
     <div class="cta-form">
       <input type="email" placeholder="Your work email address">
       <button type="button">Get in Touch</button>
@@ -880,11 +898,11 @@ footer {
 </footer>
 
 <script>
-// Sticky nav
+// ── Sticky nav ──────────────────────────────────────────────
 const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50));
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50), {passive:true});
 
-// Scroll reveal
+// ── Scroll reveal ─────────────────────────────────────────
 const reveals = document.querySelectorAll('.reveal');
 const ro = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => {
@@ -895,6 +913,58 @@ const ro = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.1 });
 reveals.forEach(el => ro.observe(el));
+
+// ── 3D Hero: mouse parallax + scroll depth ──────────────────────────
+(function() {
+  const hero = document.querySelector('.hero');
+  const hC   = document.getElementById('heroContent');
+  const blobs = [
+    document.querySelector('.b1'), document.querySelector('.b2'),
+    document.querySelector('.b3'), document.querySelector('.b4'),
+    document.querySelector('.b5')
+  ];
+  if (!hero || !hC) return;
+
+  const speeds = [-45,-30, 35,25, -20,40, 55,-20, -30,-45];
+  let tx=0, ty=0, cx=0, cy=0, sp=0, rafId;
+
+  document.addEventListener('mousemove', e => {
+    tx = (e.clientX/innerWidth  - 0.5) * 2;
+    ty = (e.clientY/innerHeight - 0.5) * 2;
+  }, {passive:true});
+
+  window.addEventListener('scroll', () => {
+    sp = Math.min(scrollY / (innerHeight * 0.9), 1);
+  }, {passive:true});
+
+  function lerp(a,b,t){ return a+(b-a)*t; }
+
+  function tick() {
+    cx = lerp(cx, tx, 0.055);
+    cy = lerp(cy, ty, 0.055);
+
+    blobs.forEach((b,i) => {
+      if (!b) return;
+      const bx = speeds[i*2], by = speeds[i*2+1];
+      b.style.transform = `translate(${cx*bx}px,${cy*by}px)`;
+    });
+
+    const dy   = sp * innerHeight * 0.26;
+    const fade = Math.max(0, 1 - sp*1.7);
+    const tiltX = cy * -3.5;
+    const tiltY = cx *  4.5;
+
+    hC.style.transform = `perspective(1200px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(${-dy}px)`;
+    hC.style.opacity   = fade;
+
+    rafId = requestAnimationFrame(tick);
+  }
+  tick();
+
+  new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) cancelAnimationFrame(rafId); else tick();
+  }).observe(hero);
+})();
 </script>
 </body>
 </html>
