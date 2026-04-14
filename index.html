@@ -669,6 +669,17 @@ footer {
 .thermal-core.breathing  { animation:heatBreathe  4.2s cubic-bezier(0.25,0.46,0.45,0.94) infinite; }
 .thermal-aura.breathing  { animation:auraBreathe  5.8s cubic-bezier(0.25,0.46,0.45,0.94) infinite; }
 .thermal-halo.breathing  { animation:haloBreathe  7.0s cubic-bezier(0.25,0.46,0.45,0.94) infinite; }
+
+/* ── MOBILE: auto-orbit thermal ─────────────────────── */
+@media (max-width:768px) {
+  /* Show thermal elements on mobile (hidden by default until JS activates) */
+  .thermal-core, .thermal-aura, .thermal-halo { opacity:1 !important; transition:none !important; }
+
+  /* Stronger blobs on mobile so they're visible */
+  .b1 { opacity:.7; }
+  .b2 { opacity:.5; }
+  .b3 { opacity:.45; }
+}
 </style>
 </head>
 <body>
@@ -968,135 +979,123 @@ footer {
 </footer>
 
 <script>
-// ── Sticky nav ──────────────────────────────────────────────
+// Sticky nav
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 50), {passive:true});
 
-// ── Scroll reveal ─────────────────────────────────────────
+// Scroll reveal
 const reveals = document.querySelectorAll('.reveal');
 const ro = new IntersectionObserver((entries) => {
   entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('in'), i * 90);
-      ro.unobserve(e.target);
-    }
+    if (e.isIntersecting) { setTimeout(() => e.target.classList.add('in'), i * 90); ro.unobserve(e.target); }
   });
 }, { threshold: 0.1 });
 reveals.forEach(el => ro.observe(el));
 
-// ── HERO FX: blob parallax + thermal cursor + idle breathing ────────
+// Hero FX: blob parallax + thermal cursor (mouse on desktop, auto-orbit on mobile)
 (function() {
-  const hero  = document.querySelector('.hero');
-  const core  = document.getElementById('thermalCore');
-  const aura  = document.getElementById('thermalAura');
-  const halo  = document.getElementById('thermalHalo');
+  const hero = document.querySelector('.hero');
+  const core = document.getElementById('thermalCore');
+  const aura = document.getElementById('thermalAura');
+  const halo = document.getElementById('thermalHalo');
   if (!hero || !core) return;
 
-  // ── Blob configs: each has parallax depth + float phase ──────────────
+  const isMobile = window.matchMedia('(max-width:768px)').matches || 'ontouchstart' in window;
+
   const blobs = [
-    { el: document.querySelector('.b1'), depth: 0.022, phase: 0.0   },  // far — barely moves
-    { el: document.querySelector('.b2'), depth: 0.040, phase: 1.3   },  // mid-far
-    { el: document.querySelector('.b3'), depth: 0.062, phase: 2.6   },  // mid
-    { el: document.querySelector('.b4'), depth: 0.095, phase: 0.9   },  // mid-close
-    { el: document.querySelector('.b5'), depth: 0.135, phase: 1.8   },  // close — moves most
+    { el: document.querySelector('.b1'), depth: 0.022, phase: 0.0 },
+    { el: document.querySelector('.b2'), depth: 0.040, phase: 1.3 },
+    { el: document.querySelector('.b3'), depth: 0.062, phase: 2.6 },
+    { el: document.querySelector('.b4'), depth: 0.095, phase: 0.9 },
+    { el: document.querySelector('.b5'), depth: 0.135, phase: 1.8 },
   ];
+  function lerp(a,b,k){ return a+(b-a)*k; }
 
-  // Mouse state
-  let mx = 0, my = 0;          // raw
-  let smx = 0, smy = 0;        // smoothed for blobs
-  let cmx = innerWidth*0.6, cmy = innerHeight*0.45;   // thermal core
-  let amx = cmx, amy = cmy;    // aura
-  let hmx = cmx, hmy = cmy;    // halo
-  let inside = false;
-  let lastMove = 0;
-  let breathing = false;
-  let idleTimer;
-
-  hero.addEventListener('mouseenter', () => {
-    inside = true;
-    [core,aura,halo].forEach(el => { if (el) el.style.transition = 'opacity 0.6s'; });
-  }, {passive:true});
-
-  hero.addEventListener('mouseleave', () => {
-    inside = false;
-  }, {passive:true});
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX;
-    my = e.clientY;
-    lastMove = performance.now();
-
-    // Stop breathing on move
-    if (breathing) {
-      breathing = false;
-      [core,aura,halo].forEach(el => { if (el) el.classList.remove('breathing'); });
+  if (!isMobile) {
+    // DESKTOP: mouse parallax + thermal cursor
+    let mx=0,my=0,smx=0,smy=0;
+    let cmx=innerWidth*0.6,cmy=innerHeight*0.45,amx=cmx,amy=cmy,hmx=cmx,hmy=cmy;
+    let inside=false,breathing=false,idleTimer;
+    hero.addEventListener('mouseenter',()=>{inside=true;[core,aura,halo].forEach(el=>{if(el)el.style.transition='opacity 0.6s';});},{passive:true});
+    hero.addEventListener('mouseleave',()=>{inside=false;},{passive:true});
+    document.addEventListener('mousemove',e=>{
+      mx=e.clientX; my=e.clientY;
+      if(breathing){breathing=false;[core,aura,halo].forEach(el=>{if(el)el.classList.remove('breathing');});}
+      clearTimeout(idleTimer);
+      idleTimer=setTimeout(()=>{
+        if(!inside)return; breathing=true;
+        [core,aura,halo].forEach(el=>{if(el)el.classList.add('breathing');});
+      },600);
+    },{passive:true});
+    function tick(){
+      const now=performance.now();
+      smx=lerp(smx,mx,0.038); smy=lerp(smy,my,0.038);
+      const nmx=(smx/innerWidth-0.5), nmy=(smy/innerHeight-0.5);
+      blobs.forEach(b=>{
+        if(!b.el)return;
+        const d=b.depth*innerWidth;
+        const fx=Math.sin(now*0.00028+b.phase)*28;
+        const fy=Math.cos(now*0.00019+b.phase*1.4)*20;
+        b.el.style.transform='translate('+(fx+nmx*d*-1.8)+'px,'+(fy+nmy*d*-1.4)+'px)';
+      });
+      if(!breathing){
+        cmx=lerp(cmx,mx,0.12);cmy=lerp(cmy,my,0.12);
+        amx=lerp(amx,mx,0.052);amy=lerp(amy,my,0.052);
+        hmx=lerp(hmx,mx,0.025);hmy=lerp(hmy,my,0.025);
+      }
+      const op=inside?1:0, rect=hero.getBoundingClientRect();
+      if(core){core.style.opacity=op;core.style.left=(cmx-rect.left)+'px';core.style.top=(cmy-rect.top)+'px';}
+      if(aura){aura.style.opacity=op;aura.style.left=(amx-rect.left)+'px';aura.style.top=(amy-rect.top)+'px';}
+      if(halo){halo.style.opacity=op*0.7;halo.style.left=(hmx-rect.left)+'px';halo.style.top=(hmy-rect.top)+'px';}
+      requestAnimationFrame(tick);
     }
-    clearTimeout(idleTimer);
-    // Start breathing after 600ms of stillness
-    idleTimer = setTimeout(() => {
-      if (!inside) return;
-      breathing = true;
-      if (core) core.classList.add('breathing');
-      if (aura) aura.classList.add('breathing');
-      if (halo) halo.classList.add('breathing');
-    }, 600);
-  }, {passive:true});
+    tick();
+    return;
+  }
 
-  function lerp(a, b, k) { return a + (b - a) * k; }
+  // MOBILE: autonomous thermal orbit — warmth loops around the hero on its own
+  // Each layer follows a different path at a different speed = layered parallax depth
+  let gcx, gcy, gax, gay, ghx, ghy;
+  function initPos(){
+    const r=hero.getBoundingClientRect();
+    gcx=gax=ghx=r.width*0.5; gcy=gay=ghy=r.height*0.42;
+  }
+  initPos();
 
-  function tick() {
-    const now = performance.now();
+  function mobileTick(){
+    const now=performance.now();
+    const rect=hero.getBoundingClientRect();
+    const W=rect.width, H=rect.height;
 
-    // ── Blob parallax: smooth mouse + organic float ───────────────────
-    smx = lerp(smx, mx, 0.038);
-    smy = lerp(smy, my, 0.038);
-    const nmx = (smx / innerWidth  - 0.5);  // -0.5 to 0.5
-    const nmy = (smy / innerHeight - 0.5);
-
-    blobs.forEach(b => {
-      if (!b.el) return;
-      const d = b.depth * innerWidth;
-      // Organic float: gentle sine/cosine drift
-      const fx = Math.sin(now * 0.00028 + b.phase)       * 28;
-      const fy = Math.cos(now * 0.00019 + b.phase * 1.4) * 20;
-      // Parallax: blobs move opposite to mouse (depth effect)
-      const px = nmx * d * -1.8;
-      const py = nmy * d * -1.4;
-      b.el.style.transform = `translate(${fx + px}px, ${fy + py}px)`;
+    // Blobs: each orbits at its own radius + speed (closer = faster + wider)
+    blobs.forEach(b=>{
+      if(!b.el)return;
+      const spd=0.00020+b.depth*0.00060;
+      const rx=W*(0.10+b.depth*0.85), ry=H*(0.08+b.depth*0.55);
+      const fx=Math.sin(now*spd       +b.phase)*rx;
+      const fy=Math.cos(now*spd*0.71  +b.phase*1.4)*ry;
+      b.el.style.transform='translate('+fx+'px,'+fy+'px)';
     });
 
-    // ── Thermal cursor: 3-layer with staggered lerp ───────────────────
-    if (!breathing) {
-      cmx = lerp(cmx, mx, 0.12);
-      cmy = lerp(cmy, my, 0.12);
-      amx = lerp(amx, mx, 0.052);
-      amy = lerp(amy, my, 0.052);
-      hmx = lerp(hmx, mx, 0.025);
-      hmy = lerp(hmy, my, 0.025);
-    }
+    // Thermal layers: wander in slow Lissajous loops, each at its own rhythm
+    const txC=W*0.50+Math.sin(now*0.00052)           *W*0.30;
+    const tyC=H*0.42+Math.sin(now*0.00040*2+1.2)     *H*0.20;
+    const txA=W*0.50+Math.sin(now*0.00036+0.8)        *W*0.34;
+    const tyA=H*0.44+Math.cos(now*0.00026+2.0)        *H*0.24;
+    const txH=W*0.50+Math.cos(now*0.00021+1.5)        *W*0.22;
+    const tyH=H*0.46+Math.sin(now*0.00017*1.6+0.4)   *H*0.16;
 
-    const opacity = inside ? 1 : 0;
-    const rect = hero.getBoundingClientRect();
+    gcx=lerp(gcx,txC,0.020); gcy=lerp(gcy,tyC,0.020);
+    gax=lerp(gax,txA,0.011); gay=lerp(gay,tyA,0.011);
+    ghx=lerp(ghx,txH,0.007); ghy=lerp(ghy,tyH,0.007);
 
-    if (core) {
-      core.style.opacity = opacity;
-      core.style.left    = (cmx - rect.left) + 'px';
-      core.style.top     = (cmy - rect.top)  + 'px';
-    }
-    if (aura) {
-      aura.style.opacity = opacity;
-      aura.style.left    = (amx - rect.left) + 'px';
-      aura.style.top     = (amy - rect.top)  + 'px';
-    }
-    if (halo) {
-      halo.style.opacity = opacity * 0.7;
-      halo.style.left    = (hmx - rect.left) + 'px';
-      halo.style.top     = (hmy - rect.top)  + 'px';
-    }
+    if(core){core.style.left=gcx+'px';core.style.top=gcy+'px';core.style.opacity='1';}
+    if(aura){aura.style.left=gax+'px';aura.style.top=gay+'px';aura.style.opacity='1';}
+    if(halo){halo.style.left=ghx+'px';halo.style.top=ghy+'px';halo.style.opacity='0.7';}
 
-    requestAnimationFrame(tick);
+    requestAnimationFrame(mobileTick);
   }
-  tick();
+  mobileTick();
 })();
 </script>
 </body>
