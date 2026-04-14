@@ -89,26 +89,26 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--cr
   width:70vw; height:70vw; max-width:800px; max-height:800px;
   background: radial-gradient(circle, #ff6a1a 0%, #c94b1a 50%, transparent 75%);
   top:-15%; right:-20%; opacity:.55;
-  animation: floatA 14s ease-in-out infinite alternate;
 }
+
 .b2 {
   width:55vw; height:55vw; max-width:650px; max-height:650px;
   background: radial-gradient(circle, #f0a500 0%, #c96a00 50%, transparent 75%);
   bottom:-20%; right:10%; opacity:.35;
-  animation: floatB 18s ease-in-out infinite alternate;
 }
+
 .b3 {
   width:45vw; height:45vw; max-width:550px; max-height:550px;
   background: radial-gradient(circle, #ff4500 0%, #8b1a00 50%, transparent 75%);
   top:30%; left:-10%; opacity:.3;
-  animation: floatC 22s ease-in-out infinite alternate;
 }
+
 .b4 {
   width:35vw; height:35vw; max-width:420px; max-height:420px;
   background: radial-gradient(circle, #ffd166 0%, #e07b00 50%, transparent 75%);
   top:5%; left:25%; opacity:.18;
-  animation: floatD 16s ease-in-out infinite alternate;
 }
+
 /* Subtle dark overlay so text stays readable */
 .hero-overlay {
   position:absolute; inset:0; z-index:1;
@@ -166,8 +166,8 @@ body { font-family:'Plus Jakarta Sans',system-ui,sans-serif; background:var(--cr
   background: radial-gradient(circle, #c94b1a 0%, transparent 70%);
   top:58%; left:4%; opacity:.15;
   mix-blend-mode:screen; filter:blur(65px);
-  animation: floatA 20s ease-in-out infinite alternate;
 }
+
 .hero-content > * { position:relative; }
 .hero-eyebrow {
   display:inline-flex; align-items:center; gap:8px;
@@ -603,34 +603,72 @@ footer {
   footer { flex-direction:column; gap:10px; text-align:center; padding:24px 20px; font-size:.75rem; }
 }
 
-/* ── THERMAL CURSOR ────────────────────────────── */
-.thermal-core, .thermal-aura {
+/* ── THERMAL CURSOR — premium ──────────────────────── */
+.thermal-core, .thermal-aura, .thermal-halo {
   position:absolute; border-radius:50%;
   pointer-events:none; z-index:2;
   transform:translate(-50%,-50%);
   mix-blend-mode:screen;
+  will-change:left,top,transform,opacity;
 }
+
+/* tight bright core — right under cursor */
 .thermal-core {
-  width:280px; height:280px;
+  width:180px; height:180px;
   background: radial-gradient(circle,
-    rgba(255,110,42,0.72) 0%,
-    rgba(244,107,42,0.45) 30%,
-    rgba(201,75,26,0.18) 60%,
+    rgba(255,130,50,0.90) 0%,
+    rgba(255,100,35,0.60) 20%,
+    rgba(244,107,42,0.28) 50%,
+    rgba(201,75,26,0.06) 75%,
+    transparent 90%
+  );
+  filter:blur(18px);
+}
+
+/* soft mid-range warmth */
+.thermal-aura {
+  width:560px; height:560px;
+  background: radial-gradient(circle,
+    rgba(244,107,42,0.26) 0%,
+    rgba(240,130,0,0.14) 30%,
+    rgba(244,107,42,0.05) 60%,
     transparent 75%
   );
-  filter:blur(28px);
-  will-change:transform,left,top;
+  filter:blur(55px);
 }
-.thermal-aura {
-  width:680px; height:680px;
+
+/* vast outer halo — barely visible, ultra wispy */
+.thermal-halo {
+  width:1100px; height:1100px;
   background: radial-gradient(circle,
-    rgba(240,165,0,0.28) 0%,
-    rgba(244,107,42,0.14) 35%,
-    transparent 65%
+    rgba(255,80,0,0.10) 0%,
+    rgba(244,107,42,0.05) 25%,
+    rgba(240,140,0,0.03) 50%,
+    transparent 68%
   );
-  filter:blur(70px);
-  will-change:transform,left,top;
+  filter:blur(90px);
 }
+
+/* IDLE BREATHING — cursor stationary */
+@keyframes heatBreathe {
+  0%   { transform:translate(-50%,-50%) scale(1);   opacity:1; }
+  45%  { transform:translate(-50%,-50%) scale(3.8); opacity:0.22; filter:blur(40px); }
+  100% { transform:translate(-50%,-50%) scale(1);   opacity:1; }
+}
+@keyframes auraBreathe {
+  0%   { transform:translate(-50%,-50%) scale(1);   opacity:1; }
+  55%  { transform:translate(-50%,-50%) scale(2.4); opacity:0.35; filter:blur(80px); }
+  100% { transform:translate(-50%,-50%) scale(1);   opacity:1; }
+}
+@keyframes haloBreathe {
+  0%   { transform:translate(-50%,-50%) scale(0.85); opacity:0.6; }
+  60%  { transform:translate(-50%,-50%) scale(1.5);  opacity:1; }
+  100% { transform:translate(-50%,-50%) scale(0.85); opacity:0.6; }
+}
+
+.thermal-core.breathing  { animation:heatBreathe  4.2s cubic-bezier(0.25,0.46,0.45,0.94) infinite; }
+.thermal-aura.breathing  { animation:auraBreathe  5.8s cubic-bezier(0.25,0.46,0.45,0.94) infinite; }
+.thermal-halo.breathing  { animation:haloBreathe  7.0s cubic-bezier(0.25,0.46,0.45,0.94) infinite; }
 </style>
 </head>
 <body>
@@ -655,6 +693,7 @@ footer {
     <div class="blob b3"></div>
     <div class="blob b4"></div>
   <div class="blob b5"></div>
+  <div class="thermal-halo"  id="thermalHalo"></div>
   <div class="thermal-aura" id="thermalAura"></div>
   <div class="thermal-core" id="thermalCore"></div>
   </div>
@@ -945,46 +984,115 @@ const ro = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 reveals.forEach(el => ro.observe(el));
 
-// ── Thermal cursor warmth effect ───────────────────────────
+// ── HERO FX: blob parallax + thermal cursor + idle breathing ────────
 (function() {
-  const hero = document.querySelector('.hero');
-  const core = document.getElementById('thermalCore');
-  const aura = document.getElementById('thermalAura');
-  if (!hero || !core || !aura) return;
+  const hero  = document.querySelector('.hero');
+  const core  = document.getElementById('thermalCore');
+  const aura  = document.getElementById('thermalAura');
+  const halo  = document.getElementById('thermalHalo');
+  if (!hero || !core) return;
 
-  // Start centred so it's not in the corner on load
-  let tx = innerWidth * 0.6, ty = innerHeight * 0.45;
-  let cx = tx, cy = ty;   // core  (fast)
-  let ax = tx, ay = ty;   // aura  (slow/trailing)
+  // ── Blob configs: each has parallax depth + float phase ──────────────
+  const blobs = [
+    { el: document.querySelector('.b1'), depth: 0.022, phase: 0.0   },  // far — barely moves
+    { el: document.querySelector('.b2'), depth: 0.040, phase: 1.3   },  // mid-far
+    { el: document.querySelector('.b3'), depth: 0.062, phase: 2.6   },  // mid
+    { el: document.querySelector('.b4'), depth: 0.095, phase: 0.9   },  // mid-close
+    { el: document.querySelector('.b5'), depth: 0.135, phase: 1.8   },  // close — moves most
+  ];
+
+  // Mouse state
+  let mx = 0, my = 0;          // raw
+  let smx = 0, smy = 0;        // smoothed for blobs
+  let cmx = innerWidth*0.6, cmy = innerHeight*0.45;   // thermal core
+  let amx = cmx, amy = cmy;    // aura
+  let hmx = cmx, hmy = cmy;    // halo
   let inside = false;
+  let lastMove = 0;
+  let breathing = false;
+  let idleTimer;
 
-  hero.addEventListener('mouseenter', () => { inside = true; }, {passive:true});
-  hero.addEventListener('mouseleave', () => { inside = false; }, {passive:true});
-
-  document.addEventListener('mousemove', e => {
-    tx = e.clientX;
-    ty = e.clientY;
+  hero.addEventListener('mouseenter', () => {
+    inside = true;
+    [core,aura,halo].forEach(el => { if (el) el.style.transition = 'opacity 0.6s'; });
   }, {passive:true});
 
-  function lerp(a, b, t) { return a + (b - a) * t; }
+  hero.addEventListener('mouseleave', () => {
+    inside = false;
+  }, {passive:true});
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+    lastMove = performance.now();
+
+    // Stop breathing on move
+    if (breathing) {
+      breathing = false;
+      [core,aura,halo].forEach(el => { if (el) el.classList.remove('breathing'); });
+    }
+    clearTimeout(idleTimer);
+    // Start breathing after 600ms of stillness
+    idleTimer = setTimeout(() => {
+      if (!inside) return;
+      breathing = true;
+      if (core) core.classList.add('breathing');
+      if (aura) aura.classList.add('breathing');
+      if (halo) halo.classList.add('breathing');
+    }, 600);
+  }, {passive:true});
+
+  function lerp(a, b, k) { return a + (b - a) * k; }
 
   function tick() {
-    // Core tracks fast, aura trails behind
-    cx = lerp(cx, tx, 0.10);
-    cy = lerp(cy, ty, 0.10);
-    ax = lerp(ax, tx, 0.045);
-    ay = lerp(ay, ty, 0.045);
+    const now = performance.now();
 
-    // Fade out when mouse leaves hero
+    // ── Blob parallax: smooth mouse + organic float ───────────────────
+    smx = lerp(smx, mx, 0.038);
+    smy = lerp(smy, my, 0.038);
+    const nmx = (smx / innerWidth  - 0.5);  // -0.5 to 0.5
+    const nmy = (smy / innerHeight - 0.5);
+
+    blobs.forEach(b => {
+      if (!b.el) return;
+      const d = b.depth * innerWidth;
+      // Organic float: gentle sine/cosine drift
+      const fx = Math.sin(now * 0.00028 + b.phase)       * 28;
+      const fy = Math.cos(now * 0.00019 + b.phase * 1.4) * 20;
+      // Parallax: blobs move opposite to mouse (depth effect)
+      const px = nmx * d * -1.8;
+      const py = nmy * d * -1.4;
+      b.el.style.transform = `translate(${fx + px}px, ${fy + py}px)`;
+    });
+
+    // ── Thermal cursor: 3-layer with staggered lerp ───────────────────
+    if (!breathing) {
+      cmx = lerp(cmx, mx, 0.12);
+      cmy = lerp(cmy, my, 0.12);
+      amx = lerp(amx, mx, 0.052);
+      amy = lerp(amy, my, 0.052);
+      hmx = lerp(hmx, mx, 0.025);
+      hmy = lerp(hmy, my, 0.025);
+    }
+
     const opacity = inside ? 1 : 0;
-    core.style.opacity = opacity;
-    aura.style.opacity = opacity;
-
     const rect = hero.getBoundingClientRect();
-    core.style.left = (cx - rect.left) + 'px';
-    core.style.top  = (cy - rect.top)  + 'px';
-    aura.style.left = (ax - rect.left) + 'px';
-    aura.style.top  = (ay - rect.top)  + 'px';
+
+    if (core) {
+      core.style.opacity = opacity;
+      core.style.left    = (cmx - rect.left) + 'px';
+      core.style.top     = (cmy - rect.top)  + 'px';
+    }
+    if (aura) {
+      aura.style.opacity = opacity;
+      aura.style.left    = (amx - rect.left) + 'px';
+      aura.style.top     = (amy - rect.top)  + 'px';
+    }
+    if (halo) {
+      halo.style.opacity = opacity * 0.7;
+      halo.style.left    = (hmx - rect.left) + 'px';
+      halo.style.top     = (hmy - rect.top)  + 'px';
+    }
 
     requestAnimationFrame(tick);
   }
