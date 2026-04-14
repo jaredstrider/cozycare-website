@@ -602,6 +602,35 @@ footer {
   /* Footer */
   footer { flex-direction:column; gap:10px; text-align:center; padding:24px 20px; font-size:.75rem; }
 }
+
+/* ── THERMAL CURSOR ────────────────────────────── */
+.thermal-core, .thermal-aura {
+  position:absolute; border-radius:50%;
+  pointer-events:none; z-index:2;
+  transform:translate(-50%,-50%);
+  mix-blend-mode:screen;
+}
+.thermal-core {
+  width:280px; height:280px;
+  background: radial-gradient(circle,
+    rgba(255,110,42,0.72) 0%,
+    rgba(244,107,42,0.45) 30%,
+    rgba(201,75,26,0.18) 60%,
+    transparent 75%
+  );
+  filter:blur(28px);
+  will-change:transform,left,top;
+}
+.thermal-aura {
+  width:680px; height:680px;
+  background: radial-gradient(circle,
+    rgba(240,165,0,0.28) 0%,
+    rgba(244,107,42,0.14) 35%,
+    transparent 65%
+  );
+  filter:blur(70px);
+  will-change:transform,left,top;
+}
 </style>
 </head>
 <body>
@@ -626,6 +655,8 @@ footer {
     <div class="blob b3"></div>
     <div class="blob b4"></div>
   <div class="blob b5"></div>
+  <div class="thermal-aura" id="thermalAura"></div>
+  <div class="thermal-core" id="thermalCore"></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-grain"></div>
@@ -914,56 +945,50 @@ const ro = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 reveals.forEach(el => ro.observe(el));
 
-// ── 3D Hero: mouse parallax + scroll depth ──────────────────────────
+// ── Thermal cursor warmth effect ───────────────────────────
 (function() {
   const hero = document.querySelector('.hero');
-  const hC   = document.getElementById('heroContent');
-  const blobs = [
-    document.querySelector('.b1'), document.querySelector('.b2'),
-    document.querySelector('.b3'), document.querySelector('.b4'),
-    document.querySelector('.b5')
-  ];
-  if (!hero || !hC) return;
+  const core = document.getElementById('thermalCore');
+  const aura = document.getElementById('thermalAura');
+  if (!hero || !core || !aura) return;
 
-  const speeds = [-45,-30, 35,25, -20,40, 55,-20, -30,-45];
-  let tx=0, ty=0, cx=0, cy=0, sp=0, rafId;
+  // Start centred so it's not in the corner on load
+  let tx = innerWidth * 0.6, ty = innerHeight * 0.45;
+  let cx = tx, cy = ty;   // core  (fast)
+  let ax = tx, ay = ty;   // aura  (slow/trailing)
+  let inside = false;
+
+  hero.addEventListener('mouseenter', () => { inside = true; }, {passive:true});
+  hero.addEventListener('mouseleave', () => { inside = false; }, {passive:true});
 
   document.addEventListener('mousemove', e => {
-    tx = (e.clientX/innerWidth  - 0.5) * 2;
-    ty = (e.clientY/innerHeight - 0.5) * 2;
+    tx = e.clientX;
+    ty = e.clientY;
   }, {passive:true});
 
-  window.addEventListener('scroll', () => {
-    sp = Math.min(scrollY / (innerHeight * 0.9), 1);
-  }, {passive:true});
-
-  function lerp(a,b,t){ return a+(b-a)*t; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
 
   function tick() {
-    cx = lerp(cx, tx, 0.055);
-    cy = lerp(cy, ty, 0.055);
+    // Core tracks fast, aura trails behind
+    cx = lerp(cx, tx, 0.10);
+    cy = lerp(cy, ty, 0.10);
+    ax = lerp(ax, tx, 0.045);
+    ay = lerp(ay, ty, 0.045);
 
-    blobs.forEach((b,i) => {
-      if (!b) return;
-      const bx = speeds[i*2], by = speeds[i*2+1];
-      b.style.transform = `translate(${cx*bx}px,${cy*by}px)`;
-    });
+    // Fade out when mouse leaves hero
+    const opacity = inside ? 1 : 0;
+    core.style.opacity = opacity;
+    aura.style.opacity = opacity;
 
-    const dy   = sp * innerHeight * 0.26;
-    const fade = Math.max(0, 1 - sp*1.7);
-    const tiltX = cy * -3.5;
-    const tiltY = cx *  4.5;
+    const rect = hero.getBoundingClientRect();
+    core.style.left = (cx - rect.left) + 'px';
+    core.style.top  = (cy - rect.top)  + 'px';
+    aura.style.left = (ax - rect.left) + 'px';
+    aura.style.top  = (ay - rect.top)  + 'px';
 
-    hC.style.transform = `perspective(1200px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(${-dy}px)`;
-    hC.style.opacity   = fade;
-
-    rafId = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
   }
   tick();
-
-  new IntersectionObserver(([e]) => {
-    if (!e.isIntersecting) cancelAnimationFrame(rafId); else tick();
-  }).observe(hero);
 })();
 </script>
 </body>
