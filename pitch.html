@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First Medical Company — Thermal Warming Blanket Strategy</title>
+<style>
+  :root {
+    --navy: #0a1628;
+    --blue: #1a3a6b;
+    --accent: #0077cc;
+    --teal: #00a896;
+    --gold: #f4a522;
+    --light: #f4f7fc;
+    --white: #ffffff;
+    --text: #1a1a2e;
+    --muted: #5a6a7a;
+    --danger: #c0392b;
+    --success: #27ae60;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--light);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: var(--navy);
+    padding: 14px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .nav-logo { color: white; font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: white; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 60%, #1a5a8a 100%);
+    color: white;
+    padding: 140px 60px 100px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at center, rgba(0,119,204,0.15) 0%, transparent 60%);
+    animation: pulse 6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(244,165,34,0.2);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.8);
+    max-width: 680px;
+    margin: 0 auto 40px;
+    position: relative;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 60px;
+    position: relative;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 90px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 50px;
+    max-width: 650px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--teal));
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  /* OPPORTUNITY BLOCK */
+  .opportunity-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .opp-card {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    border-top: 4px solid var(--accent);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .opp-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
+  .opp-card.gold { border-top-color: var(--gold); }
+  .opp-card.teal { border-top-color: var(--teal); }
+  .opp-icon { font-size: 2rem; margin-bottom: 16px; }
+  .opp-card h3 { font-size: 1.15rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+  .opp-card p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; }
+  .opp-num { font-size: 2rem; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
+
+  /* COMPETITOR TABLE */
+  .comp-section { background: var(--navy); color: white; padding: 90px 0; }
+  .comp-inner { max-width: 1200px; margin: 0 auto; padding: 0 60px; }
+  .comp-section .section-label { color: var(--gold); }
+  .comp-section h2 { color: white; }
+  .comp-section .subtitle { color: rgba(255,255,255,0.65); }
+  .comp-table { width: 100%; border-collapse: collapse; margin-top: 40px; }
+  .comp-table th {
+    background: rgba(255,255,255,0.08);
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gold);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .comp-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.85);
+    vertical-align: top;
+  }
+  .comp-table tr:hover td { background: rgba(255,255,255,0.04); }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .badge-danger { background: rgba(192,57,43,0.25); color: #e74c3c; border: 1px solid rgba(192,57,43,0.4); }
+  .badge-warn { background: rgba(244,165,34,0.2); color: var(--gold); border: 1px solid rgba(244,165,34,0.4); }
+  .badge-ok { background: rgba(39,174,96,0.2); color: #2ecc71; border: 1px solid rgba(39,174,96,0.3); }
+  .badge-fmc { background: rgba(0,119,204,0.3); color: #74b9ff; border: 1px solid rgba(0,119,204,0.5); }
+
+  /* VULNERABILITY SPOTLIGHT */
+  .vuln-box {
+    background: linear-gradient(135deg, #1a0505, #3d0000);
+    border: 1px solid rgba(192,57,43,0.4);
+    border-radius: 16px;
+    padding: 40px;
+    margin-top: 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .vuln-box::before {
+    content: '⚠';
+    position: absolute;
+    right: 30px; top: 20px;
+    font-size: 6rem;
+    opacity: 0.07;
+  }
+  .vuln-box h3 { color: #e74c3c; font-size: 1.3rem; margin-bottom: 14px; }
+  .vuln-box p { color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.7; }
+  .vuln-box .vuln-stat {
+    display: flex; gap: 40px; margin-top: 24px;
+  }
+  .vuln-stat-item { text-align: center; }
+  .vuln-stat-item span { display: block; font-size: 1.8rem; font-weight: 800; color: #e74c3c; }
+  .vuln-stat-item small { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+
+  /* STRATEGY */
+  .strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+  .strategy-card {
+    background: white;
+    border-radius: 16px;
+    padding: 36px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .strategy-card .num {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--accent), var(--teal));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 800; font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+  .strategy-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+  .strategy-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+  .strategy-card ul { margin-top: 10px; padding-left: 18px; }
+  .strategy-card ul li { font-size: 0.88rem; color: var(--muted); margin-bottom: 6px; }
+
+  /* NHI CALLOUT */
+  .nhi-box {
+    background: linear-gradient(135deg, #001a0f, #003322);
+    border: 1px solid rgba(0,168,150,0.3);
+    border-radius: 16px;
+    padding: 40px 50px;
+    margin-top: 60px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+  .nhi-icon { font-size: 3.5rem; flex-shrink: 0; }
+  .nhi-box h3 { color: var(--teal); font-size: 1.3rem; margin-bottom: 10px; }
+  .nhi-box p { color: rgba(255,255,255,0.8); font-size: 0.92rem; line-height: 1.65; }
+
+  /* ROADMAP */
+  .roadmap { display: flex; gap: 0; margin-top: 50px; position: relative; }
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    top: 28px; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--teal));
+  }
+  .phase {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding: 0 10px;
+  }
+  .phase-dot {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: white;
+    margin: 0 auto 20px;
+    position: relative;
+    z-index: 1;
+    border: 3px solid white;
+  }
+  .phase-dot.p1 { background: var(--accent); }
+  .phase-dot.p2 { background: var(--teal); }
+  .phase-dot.p3 { background: var(--gold); }
+  .phase-dot.p4 { background: var(--blue); }
+  .phase h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .phase .phase-time { font-size: 0.78rem; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .phase p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+  /* BRAND */
+  .brand-section { background: linear-gradient(135deg, #f8f4ea, #fff9f0); }
+  .brand-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 40px; }
+  .brand-card {
+    background: white;
+    border-radius: 20px;
+    padding: 36px 30px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 2px solid transparent;
+  }
+  .brand-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,0.14); border-color: var(--gold); }
+  .brand-logo {
+    font-size: 1.8rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+  }
+  .brand-tagline {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .brand-card h4 { font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .brand-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+  .brand-badge {
+    margin-top: 16px;
+    display: inline-block;
+    background: var(--light);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* CTA */
+  .cta-section {
+    background: linear-gradient(135deg, var(--navy), var(--blue));
+    color: white;
+    text-align: center;
+    padding: 100px 60px;
+  }
+  .cta-section h2 { color: white; font-size: 2.5rem; margin-bottom: 20px; }
+  .cta-section p { color: rgba(255,255,255,0.7); font-size: 1.1rem; max-width: 600px; margin: 0 auto 40px; }
+  .cta-btn {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .cta-btn:hover { background: #ffc040; transform: scale(1.04); }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+    padding: 30px;
+    font-size: 0.82rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero { padding: 120px 30px 80px; }
+    .hero h1 { font-size: 2.2rem; }
+    .hero-stats { gap: 30px; }
+    section { padding: 60px 30px; }
+    .opportunity-grid, .strategy-grid, .brand-grid { grid-template-columns: 1fr; }
+    .roadmap { flex-direction: column; gap: 24px; }
+    .roadmap::before { display: none; }
+    .comp-inner { padding: 0 30px; }
+    nav { padding: 14px 24px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">FIRST <span>MEDICAL</span> COMPANY</div>
+  <div class="nav-links">
+    <a href="#opportunity">Opportunity</a>
+    <a href="#competition">Competition</a>
+    <a href="#strategy">Strategy</a>
+    <a href="#brand">Brand</a>
+    <a href="#roadmap">Roadmap</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Confidential · CEO Briefing 2025</div>
+  <h1>Owning the <span>Warm</span><br>in South African ORs</h1>
+  <p>A strategic case for First Medical Company to launch and dominate the patient thermal warming blanket category in South Africa — before anyone else does.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">$960M</span>
+      <span class="stat-label">SA Hospital Supplies Market (2025)</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">6.76%</span>
+      <span class="stat-label">Annual Market Growth (CAGR)</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">0</span>
+      <span class="stat-label">Dominant Local Brand — Yet</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">8,784</span>
+      <span class="stat-label">Active Lawsuits vs. Market Leader</span>
+    </div>
+  </div>
+</div>
+
+<!-- OPPORTUNITY -->
+<section id="opportunity">
+  <div class="section-label">The Opportunity</div>
+  <div class="divider"></div>
+  <h2>A Market Ready to Be Disrupted</h2>
+  <p class="subtitle">Patient warming is a clinical standard — every surgical patient needs it. Yet South Africa has no dominant local brand, no local manufacturer with real market share, and the global leader is mired in controversy.</p>
+
+  <div class="opportunity-grid">
+    <div class="opp-card">
+      <div class="opp-icon">🏥</div>
+      <div class="opp-num">473+</div>
+      <h3>Surgical Theatres</h3>
+      <p>Netcare (276), Mediclinic (134+), Life Healthcare (63+) — three private hospital groups controlling 90% of surgical volume in SA, all centrally procured.</p>
+    </div>
+    <div class="opp-card gold">
+      <div class="opp-icon">⚖️</div>
+      <div class="opp-num">BBBEE</div>
+      <h3>Procurement Advantage</h3>
+      <p>Government and private hospitals are under pressure to source from local, BBBEE-compliant suppliers. An SA-owned brand has a structural procurement edge foreign competitors cannot match.</p>
+    </div>
+    <div class="opp-card teal">
+      <div class="opp-icon">🏛️</div>
+      <div class="opp-num">NHI</div>
+      <h3>National Health Insurance</h3>
+      <p>The NHI Act (signed May 2024) will create centralized procurement for the entire public health system. Early positioning on the Essential Equipment List could mean national-scale contracts.</p>
+    </div>
+    <div class="opp-card">
+      <div class="opp-icon">💰</div>
+      <div class="opp-num">10–15x</div>
+      <h3>Cost Per Use Gap</h3>
+      <p>Bair Hugger single-use blankets cost ~R180–270 each. Resistive/conductive alternatives deliver the same clinical outcome for R35–55. Hospitals want savings — we deliver them.</p>
+    </div>
+    <div class="opp-card gold">
+      <div class="opp-icon">🦠</div>
+      <div class="opp-num">96%</div>
+      <h3>Infection Control Crisis</h3>
+      <p>96% of Bair Hugger units tested dispersed excessive bacterial contaminants. Hospital Infection Control committees are actively seeking alternatives — we have a ready narrative.</p>
+    </div>
+    <div class="opp-card teal">
+      <div class="opp-icon">🌍</div>
+      <div class="opp-num">Zero</div>
+      <h3>Local Competition</h3>
+      <p>Only one local manufacturer exists (Medical Plant Africa, Cape Town — low visibility). No local brand has staked a claim. The shelf is empty. First Medical Company can own it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMPETITION -->
+<div class="comp-section" id="competition">
+  <div class="comp-inner">
+    <div class="section-label">Competitive Landscape</div>
+    <div class="divider" style="background: linear-gradient(90deg,var(--gold),#ffa500);"></div>
+    <h2>Who We're Up Against</h2>
+    <p class="subtitle">The South African warming blanket market has a clear hierarchy — and a clear opening.</p>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Brand</th>
+          <th>Origin</th>
+          <th>Technology</th>
+          <th>SA Presence</th>
+          <th>Cost / Use</th>
+          <th>Key Weakness</th>
+          <th>Threat Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>3M Bair Hugger</strong></td>
+          <td>USA</td>
+          <td>Forced-air warming</td>
+          <td>Active via 3M MEA</td>
+          <td>~R180–270</td>
+          <td>8,784 active lawsuits; infection concerns; expensive consumables</td>
+          <td><span class="badge badge-danger">High — but vulnerable</span></td>
+        </tr>
+        <tr>
+          <td><strong>HotDog (Augustine Temp Mgmt)</strong></td>
+          <td>USA</td>
+          <td>Resistive/conductive</td>
+          <td>Via SSEM Mthembu distributor</td>
+          <td>~R35–55</td>
+          <td>Single distributor; no local brand presence; no SA identity</td>
+          <td><span class="badge badge-warn">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Gentherm / Stryker</strong></td>
+          <td>USA</td>
+          <td>Conductive + forced-air</td>
+          <td>Limited</td>
+          <td>High</td>
+          <td>Premium pricing; no SA-specific positioning</td>
+          <td><span class="badge badge-warn">Low–Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Medical Plant Africa (ProSurgery)</strong></td>
+          <td>SA — Cape Town</td>
+          <td>Various</td>
+          <td>Low visibility</td>
+          <td>Unknown</td>
+          <td>Under-resourced; limited distribution; no marketing</td>
+          <td><span class="badge badge-ok">Low</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color:#74b9ff;">First Medical Company</strong> <em style="opacity:0.6;font-size:0.8rem;">(proposed)</em></td>
+          <td>South Africa 🇿🇦</td>
+          <td>Resistive / single-use hybrid</td>
+          <td>First-mover local brand</td>
+          <td>Target: R40–80</td>
+          <td>New entrant — needs clinical validation &amp; distribution</td>
+          <td><span class="badge badge-fmc">Challenger</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="vuln-box">
+      <h3>⚠ Bair Hugger's Achilles Heel — Our Biggest Opening</h3>
+      <p>The 3M Bair Hugger has dominated patient warming for 35+ years — but it's in crisis. The system works by blowing warm air through perforated blankets. Multiple peer-reviewed studies confirm this recirculates bacteria from OR floors directly into the sterile surgical field. The system's own inventor, Dr. Scott Augustine, now publicly condemns the product and has built a competing company around the risk. South African hospital infection control teams are aware of these concerns and actively evaluating alternatives.</p>
+      <div class="vuln-stat">
+        <div class="vuln-stat-item"><span>8,784</span><small>Active lawsuits in the US</small></div>
+        <div class="vuln-stat-item"><span>96%</span><small>Of units tested showed excess contaminants</small></div>
+        <div class="vuln-stat-item"><span>35yrs</span><small>Of entrenched hospital relationships — now at risk</small></div>
+      </div>
+    </div>
+
+    <div class="nhi-box" style="margin-top:50px;">
+      <div class="nhi-icon">🏛️</div>
+      <div>
+        <h3>NHI: The $1B+ Long Game</h3>
+        <p>South Africa's National Health Insurance Act was signed into law in May 2024. It will consolidate public healthcare procurement under a single national fund — potentially covering 50M+ patients. Companies that establish clinical credibility, SAHPRA registration, and BBBEE compliance <strong>now</strong> will be positioned to win national supply agreements when the NHI procurement unit operationalizes. This is a 3–7 year horizon, but the groundwork must be laid today.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY -->
+<section id="strategy">
+  <div class="section-label">Go-to-Market Strategy</div>
+  <div class="divider"></div>
+  <h2>How First Medical Company Wins</h2>
+  <p class="subtitle">Four pillars that create compounding competitive advantage — each one reinforcing the next.</p>
+
+  <div class="strategy-grid">
+    <div class="strategy-card">
+      <div class="num">1</div>
+      <h3>Lead with Infection Control</h3>
+      <p>Position the brand as the clinically safer alternative to forced-air warming. Partner with SA infection control associations to publish local data. Every Bair Hugger lawsuit headline is a free sales call for us.</p>
+      <ul>
+        <li>Commission independent SA clinical study</li>
+        <li>Target Hospital Infection Control Committees directly</li>
+        <li>Create clinical education material for theatre nurses &amp; anaesthesiologists</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <div class="num">2</div>
+      <h3>Price for Market Share, Not Margin</h3>
+      <p>At R40–80 per use vs. Bair Hugger's R180–270, we deliver 60–70% cost savings per procedure. A 300-theatre hospital performing 5,000 surgeries/year saves R500,000–1,000,000 annually. That's a CFO conversation, not just a clinical one.</p>
+      <ul>
+        <li>Build a "cost-per-use calculator" for procurement teams</li>
+        <li>Target theatre managers and hospital supply chain managers</li>
+        <li>Offer pilot programmes at zero cost for 3 months</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <div class="num">3</div>
+      <h3>Own the Local Narrative</h3>
+      <p>No foreign brand can claim "Made in South Africa." Use BBBEE compliance, local employment, and SA manufacturing as procurement levers. NHI procurement guidelines will heavily favour local suppliers — we build that story from day one.</p>
+      <ul>
+        <li>Register as preferred supplier with all 3 major private hospital groups</li>
+        <li>Apply for SAHPRA Class B medical device registration</li>
+        <li>Pursue BBBEE Level 1–2 certification</li>
+      </ul>
+    </div>
+    <div class="strategy-card">
+      <div class="num">4</div>
+      <h3>Target the Right Entry Points</h3>
+      <p>Don't try to replace Bair Hugger everywhere at once. Start with surgical specialties where infection control is highest-stakes: orthopaedics, cardiothoracic, and joint replacement. These are where the lawsuits bite hardest and where clinical managers will listen.</p>
+      <ul>
+        <li>Orthopaedics &amp; joint replacement (highest infection risk from forced-air)</li>
+        <li>Cardiothoracic surgery</li>
+        <li>High-volume day surgery centres (cost sensitivity is maximum)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BRAND -->
+<div class="brand-section" id="brand">
+  <section style="max-width:1200px; margin:0 auto;">
+    <div class="section-label">Brand Identity Options</div>
+    <div class="divider" style="background: linear-gradient(90deg,var(--gold),#e67e22);"></div>
+    <h2>Naming the Brand</h2>
+    <p class="subtitle">Three distinct brand directions — each with its own positioning angle. Pick one or blend elements.</p>
+
+    <div class="brand-grid">
+      <div class="brand-card">
+        <div class="brand-logo" style="color:#0077cc;">THERMA<span style="color:#f4a522;">GUARD</span></div>
+        <div class="brand-tagline">"Warm. Protected. Certain."</div>
+        <h4>The Safety & Trust Play</h4>
+        <p>Positions against Bair Hugger's infection narrative directly. "Guard" connotes both warmth and sterile protection — resonates with infection control committees and theatre sisters. Clinical, serious, authoritative.</p>
+        <div class="brand-badge">Best for: Clinical / B2B Sales</div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-logo" style="color:#00a896;">SOLACE<span style="color:#0a1628; font-size:0.75em;"> MEDICAL</span></div>
+        <div class="brand-tagline">"Comfort in every theatre."</div>
+        <h4>The Patient-Centred Play</h4>
+        <p>Solace means comfort and relief. A warmer, human brand that speaks to patient dignity and care outcomes. Appeals to private hospital groups focused on patient experience scores. SA-neutral — works regionally and internationally.</p>
+        <div class="brand-badge">Best for: Private Hospitals / Patient Experience</div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-logo" style="color:#c0392b;">VELD<span style="color:#f4a522;">THERM</span></div>
+        <div class="brand-tagline">"Born here. Built for here."</div>
+        <h4>The Proudly SA Play</h4>
+        <p>"Veld" is unmistakably South African. Therm ties it to thermal/temperature science. Owns the local narrative entirely — no foreign brand can compete on this axis. Strongest for NHI and government procurement positioning.</p>
+        <div class="brand-badge">Best for: Government / NHI / Local Procurement</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-label">Execution Roadmap</div>
+  <div class="divider"></div>
+  <h2>From Decision to Market Leader</h2>
+  <p class="subtitle">A four-phase plan that takes First Medical Company from brand launch to dominant local player within 36 months.</p>
+
+  <div class="roadmap">
+    <div class="phase">
+      <div class="phase-dot p1">1</div>
+      <div class="phase-time">Months 1–3</div>
+      <h4>Foundation</h4>
+      <p>SAHPRA registration, BBBEE cert, brand finalization, product sourcing/manufacturing decision, legal protection of brand name and IP</p>
+    </div>
+    <div class="phase">
+      <div class="phase-dot p2">2</div>
+      <div class="phase-time">Months 4–9</div>
+      <h4>Pilot Launch</h4>
+      <p>Free pilot programmes at 5–10 hospitals across Netcare and Mediclinic, clinical data collection, key opinion leader engagement, first commercial sales</p>
+    </div>
+    <div class="phase">
+      <div class="phase-dot p3">3</div>
+      <div class="phase-time">Months 10–18</div>
+      <h4>Market Rollout</h4>
+      <p>Full private hospital sales push, preferred supplier agreements, clinical study publication, direct competition with Bair Hugger in top-10 hospitals by surgical volume</p>
+    </div>
+    <div class="phase">
+      <div class="phase-dot p4">4</div>
+      <div class="phase-time">Months 19–36</div>
+      <h4>Category Ownership</h4>
+      <p>NHI procurement positioning, public sector entry, pan-African expansion (Zimbabwe, Zambia, Botswana, Namibia), potential OEM partnerships with neighbouring countries</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>The Shelf Is Empty.<br>First Medical Company Should Fill It.</h2>
+  <p>No dominant local brand. A global leader under legal siege. A government driving local procurement. A R960M market growing at 6.76% annually. The conditions for a market-defining move don't get much better than this.</p>
+  <a href="#opportunity" class="cta-btn">Review the Opportunity →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>First Medical Company — Confidential Strategic Briefing · Prepared April 2025 · Not for external distribution</p>
+</footer>
+
+</body>
+</html>
